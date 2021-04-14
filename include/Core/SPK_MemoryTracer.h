@@ -58,7 +58,7 @@ namespace SPK
 
 		static SPKMemoryTracer& get();
 
-		void* registerAllocation(void* position, size_t size, const std::string& type, const std::string& file, size_t line);
+		void* registerAllocation(void* position, unsigned int size, const std::string& type, const std::string& file, unsigned int line);
 		void unregisterAllocation(void* position);
 		std::string formatSize(unsigned int s);
 		void dumpMemory();
@@ -68,10 +68,10 @@ namespace SPK
 		struct BlockInfo
 		{
 			void* position;
-			size_t size;
+			unsigned int size;
 			std::string type;
 			std::string fileName;
-			size_t lineNb;
+			unsigned int lineNb;
 			float time;
 			unsigned long index;
 

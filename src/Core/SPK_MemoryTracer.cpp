@@ -38,7 +38,7 @@ namespace SPK
 		return instance;
 	}
 
-	void* SPKMemoryTracer::registerAllocation(void* position,size_t size,const std::string& type,const std::string& file,size_t line)
+	void* SPKMemoryTracer::registerAllocation(void* position,unsigned int size,const std::string& type,const std::string& file,unsigned int line)
 	{
 		if (position == NULL)
 			return NULL;

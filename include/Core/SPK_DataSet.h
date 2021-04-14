@@ -75,7 +75,7 @@ namespace SPK
 		* @param index0 : index of the first particle
 		* @param index1 : index of the second particle
 		*/
-		virtual void swap(size_t index0,size_t index1) = 0;
+		virtual void swap(unsigned int index0,unsigned int index1) = 0;
 	};
 
 	/**
@@ -100,21 +100,21 @@ namespace SPK
 		* This reserves the slots of data but does not fill them with any data.
 		* @param nbData : the number of data this dataset can hold
 		*/
-		void init(size_t nbData);
+		void init(unsigned int nbData);
 
 		/**
 		* @brief Sets the data for a given data slot
 		* @param index : the slot index where to store the data
 		* @param data : the data to store
 		*/
-		void setData(size_t index,Data* data);
+		void setData(unsigned int index,Data* data);
 
 		/**
 		* @brief Gets the data at a given slot
 		* @param index : the index of the slot from where to retrieve the data
 		* @return the data in the given slot
 		*/
-		Data* getData(size_t index);
+		Data* getData(unsigned int index);
 
 		/**
 		* @brief Gets the data at a given slot
@@ -122,7 +122,7 @@ namespace SPK
 		* @param index : the index of the slot from where to retrieve the data
 		* @return the data in the given slot
 		*/
-		const Data* getData(size_t index) const;
+		const Data* getData(unsigned int index) const;
 
 		/**
 		* @brief Tells whether this dataset is initialized
@@ -135,7 +135,7 @@ namespace SPK
 		* @brief Destroys the data of a particular slot
 		* @param index : the index of the slot in which to destroy the data
 		*/
-		void destroyData(size_t index);
+		void destroyData(unsigned int index);
 
 		/** @brief Destroys all the data held */
 		void destroyAllData();
@@ -143,11 +143,11 @@ namespace SPK
 	private :
 
 		Data** dataArray;
-		size_t nbData;
+		unsigned int nbData;
 		bool initialized;
 
 		void setInitialized();
-		void swap(size_t index0,size_t index1);
+		void swap(unsigned int index0,unsigned int index1);
 	};
 
 	inline Data::Data() :
@@ -181,12 +181,12 @@ namespace SPK
 		initialized = true;
 	}
 
-	inline Data* DataSet::getData(size_t index)
+	inline Data* DataSet::getData(unsigned int index)
 	{
 		return dataArray[index];
 	}
 
-	inline const Data* DataSet::getData(size_t index) const
+	inline const Data* DataSet::getData(unsigned int index) const
 	{
 		return dataArray[index];
 	}
@@ -196,14 +196,14 @@ namespace SPK
 		return initialized;
 	}
 
-	inline void DataSet::destroyData(size_t index)
+	inline void DataSet::destroyData(unsigned int index)
 	{
 		setData(index,NULL);
 	}
 
-	inline void DataSet::swap(size_t index0,size_t index1)
+	inline void DataSet::swap(unsigned int index0,unsigned int index1)
 	{
-		for (size_t i = 0; i < nbData; ++i)
+		for (unsigned int i = 0; i < nbData; ++i)
 			dataArray[i]->swap(index0,index1);
 	}
 };

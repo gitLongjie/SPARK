@@ -68,11 +68,11 @@ namespace SPK
 			removeGroup(groups.back());
 	}
 
-	Ref<Group> System::createGroup(size_t capacity)
+	Ref<Group> System::createGroup(unsigned int capacity)
 	{
 		if (capacity == 0)
 		{
-			SPK_LOG_ERROR("System::createGroup(size_t) - The capacity of a Group cannot be 0, NULL is returned");
+			SPK_LOG_ERROR("System::createGroup(unsigned int) - The capacity of a Group cannot be 0, NULL is returned");
 			return SPK_NULL_REF;
 		}
 
@@ -134,9 +134,9 @@ namespace SPK
 		}
 	}
 
-	size_t System::getNbParticles() const
+	unsigned int System::getNbParticles() const
 	{
-		size_t nbParticles = 0;
+		unsigned int nbParticles = 0;
 		for (std::vector<Ref<Group> >::const_iterator it = groups.begin(); it != groups.end(); ++it)
 			nbParticles += (*it)->getNbParticles();
 		return nbParticles;

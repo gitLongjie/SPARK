@@ -58,7 +58,7 @@ namespace SPK
 
 	public :
 
-		static Ref<Group> create(size_t capacity = 100);
+		static Ref<Group> create(unsigned int capacity = 100);
 		~Group();
 
 		bool isInitialized() const;
@@ -91,26 +91,26 @@ namespace SPK
 
 		bool isEnabled(Param param) const;
 
-		size_t getNbParticles() const;
-		size_t getCapacity() const;
+		unsigned int getNbParticles() const;
+		unsigned int getCapacity() const;
 
-		Particle getParticle(size_t index);
-		const Particle getParticle(size_t index) const;
+		Particle getParticle(unsigned int index);
+		const Particle getParticle(unsigned int index) const;
 
-		void reallocate(size_t capacity);
+		void reallocate(unsigned int capacity);
 		void empty();
 
 		void addEmitter(const Ref<Emitter>& emitter);
 		void removeEmitter(const Ref<Emitter>& emitter);
 		void removeAllEmitters();
 		const Ref<Emitter>& getEmitter(size_t index) const;
-		size_t getNbEmitters() const;
+        size_t getNbEmitters() const;
 
 		void addModifier(const Ref<Modifier>& modifier);
 		void removeModifier(const Ref<Modifier>& modifier);
 		void removeAllModifiers();
 		const Ref<Modifier>& getModifier(size_t index) const;
-		size_t getNbModifiers() const;
+        size_t getNbModifiers() const;
 
 		void setRenderer(const Ref<Renderer>& renderer);
 		const Ref<Renderer>& getRenderer() const;
@@ -393,7 +393,7 @@ namespace SPK
 
 	private :
 
-		static const size_t NB_PARAMETERS = 5;
+		static const unsigned int NB_PARAMETERS = 5;
 		static const float DEFAULT_VALUES[NB_PARAMETERS];
 
 		// This holds the structure of arrays (SOA) containing data of particles
@@ -401,8 +401,8 @@ namespace SPK
 		{
 			bool initialized;
 
-			size_t nbParticles;
-			size_t maxParticles;
+			unsigned int nbParticles;
+            unsigned int maxParticles;
 
 			// Particles attributes
 			Vector3D* positions;
@@ -431,7 +431,7 @@ namespace SPK
 				sqrDists(NULL),
 				colors(NULL)
 			{
-				for (size_t i = 0; i < NB_PARAMETERS; ++i)
+				for (unsigned int i = 0; i < NB_PARAMETERS; ++i)
 					parameters[i] = NULL;
 			}
 		};
@@ -439,9 +439,9 @@ namespace SPK
 		struct WeakEmitterPair
 		{
 			Emitter* obj;
-			size_t nbBorn;
+			unsigned int nbBorn;
 
-			WeakEmitterPair(const Ref<Emitter>& obj,size_t nbBorn) :
+			WeakEmitterPair(const Ref<Emitter>& obj,unsigned int nbBorn) :
 				obj(obj.get()),
 				nbBorn(nbBorn)
 			{}
@@ -534,8 +534,8 @@ namespace SPK
 		System* system;
 
 		ParticleData particleData;
-		size_t enabledParamIndices[NB_PARAMETERS];
-		size_t nbEnabledParameters;
+		unsigned int enabledParamIndices[NB_PARAMETERS];
+		unsigned int nbEnabledParameters;
 
 		ColorInterpolatorDef colorInterpolator;
 		FloatInterpolatorDef paramInterpolators[NB_PARAMETERS];
@@ -571,19 +571,19 @@ namespace SPK
 
 		Octree* octree;
 
-		Group(const Ref<System>& system = SPK_NULL_REF,size_t capacity = 100);
+		Group(const Ref<System>& system = SPK_NULL_REF,unsigned int capacity = 100);
 		Group(const Group& group);
 
 		bool updateParticles(float deltaTime);
 		void renderParticles();
 
-		bool initParticle(size_t index,size_t& emitterIndex,size_t& nbManualBorn);
-		void swapParticles(size_t index0,size_t index1);
+		bool initParticle(unsigned int index,unsigned int& emitterIndex,unsigned int& nbManualBorn);
+		void swapParticles(unsigned int index0,unsigned int index1);
 
 		void recomputeEnabledParamIndices();
 
 		template<typename T>
-		void reallocateArray(T*& t,size_t newSize,size_t copySize);
+		void reallocateArray(T*& t,unsigned int newSize,unsigned int copySize);
 
 		DataSet* attachDataSet(DataHandler* dataHandler);
 		void detachDataSet(DataSet* dataHandler);
@@ -614,13 +614,13 @@ namespace SPK
 		void initData();
 	};
 
-	inline Ref<Group> Group::create(size_t capacity)
+	inline Ref<Group> Group::create(unsigned int capacity)
 	{
 		return SPK_NEW(Group,SPK_NULL_REF,capacity);
 	}
 
 	template<typename T>
-	void Group::reallocateArray(T*& t,size_t newSize,size_t copySize)
+	void Group::reallocateArray(T*& t,unsigned int newSize,unsigned int copySize)
 	{
 		T* oldT = t;
 		t = SPK_NEW_ARRAY(T,newSize);
@@ -734,12 +734,12 @@ namespace SPK
 		return particleData.parameters[param] != NULL;
 	}
 
-	inline size_t Group::getNbParticles() const
+	inline unsigned int Group::getNbParticles() const
 	{
 		return particleData.nbParticles;
 	}
 
-	inline size_t Group::getCapacity() const
+	inline unsigned int Group::getCapacity() const
 	{
 		return particleData.maxParticles;
 	}

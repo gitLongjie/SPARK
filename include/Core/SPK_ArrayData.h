@@ -42,7 +42,7 @@ namespace SPK
 		* @param nbParticles : the maximum number of particles
 		* @param sizePerParticle : the number of variable of type T per particle
 		*/
-		ArrayData<T>(size_t nbParticles,size_t sizePerParticle);
+		ArrayData<T>(unsigned int nbParticles,unsigned int sizePerParticle);
 
 		/**
 		* @brief Gets the inner array of data
@@ -61,21 +61,21 @@ namespace SPK
 		* @brief Gets the array of data for a given particle
 		* @return the array of data for a given particle
 		*/
-		T* getParticleData(size_t index);
+		T* getParticleData(unsigned int index);
 
 		/**
 		* @brief Gets the array of data for a given particle
 		* This is the constant version of the method
 		* @return the array of data for a given particle
 		*/
-		const T* getParticleData(size_t index) const;
+		const T* getParticleData(unsigned int index) const;
 
 		/**
 		* @brief Gets the element in the inner array at the given index
 		* @param index : the index from which to get the element
 		* @return the element stored at the index
 		*/ 
-		T& operator[](size_t index);
+		T& operator[](unsigned int index);
 
 		/**
 		* @brief Gets the element in the inner array at the given index
@@ -83,30 +83,30 @@ namespace SPK
 		* @param index : the index from which to get the element
 		* @return the element stored at the index
 		*/ 
-		const T& operator[](size_t index) const;
+		const T& operator[](unsigned int index) const;
 
 		/**
 		* @brief Gets the total number of elements in the inner array
 		* This method returns <i>max number of particles * number of variables per particles</i>
 		* @return the total number of elements in the inner array
 		*/
-		size_t getTotalSize() const;
+		unsigned int getTotalSize() const;
 
 		/**
 		* @brief Gets the number of elements per particle
 		* @return the number of elements per particle
 		*/
-		size_t getSizePerParticle() const;
+		unsigned int getSizePerParticle() const;
 
 	private :
 
 		T* data;
-		size_t totalSize;
-		size_t sizePerParticle;
+		unsigned int totalSize;
+		unsigned int sizePerParticle;
 
 		~ArrayData<T>();
 
-		virtual void swap(size_t index0,size_t index1);
+		virtual void swap(unsigned int index0,unsigned int index1);
 	};
 
 	typedef ArrayData<float>	FloatArrayData;		/**< @brief ArrayData holding floats */
@@ -114,7 +114,7 @@ namespace SPK
 	typedef ArrayData<Vector3D> Vector3DArrayData;	/**< @brief ArrayData holding vectors */
 
 	template<typename T>
-	inline ArrayData<T>::ArrayData(size_t nbParticles,size_t sizePerParticle) :
+	inline ArrayData<T>::ArrayData(unsigned int nbParticles,unsigned int sizePerParticle) :
 		Data(),
 		totalSize(nbParticles * sizePerParticle),
 		sizePerParticle(sizePerParticle)
@@ -141,47 +141,47 @@ namespace SPK
 	}
 
 	template<typename T>
-	inline T* ArrayData<T>::getParticleData(size_t index)
+	inline T* ArrayData<T>::getParticleData(unsigned int index)
 	{
 		return data + index * sizePerParticle;
 	}
 
 	template<typename T>
-	inline const T* ArrayData<T>::getParticleData(size_t index) const
+	inline const T* ArrayData<T>::getParticleData(unsigned int index) const
 	{
 		return data + index * sizePerParticle;
 	}
 
 	template<typename T>
-	inline T& ArrayData<T>::operator[](size_t index)
+	inline T& ArrayData<T>::operator[](unsigned int index)
 	{
 		return data[index];
 	}
 	
 	template<typename T>
-	inline const T& ArrayData<T>::operator[](size_t index) const
+	inline const T& ArrayData<T>::operator[](unsigned int index) const
 	{
 		return data[index];
 	}
 
 	template<typename T>
-	inline size_t ArrayData<T>::getTotalSize() const
+	inline unsigned int ArrayData<T>::getTotalSize() const
 	{
 		return totalSize;
 	}
 
 	template<typename T>
-	inline size_t ArrayData<T>::getSizePerParticle() const
+	inline unsigned int ArrayData<T>::getSizePerParticle() const
 	{
 		return sizePerParticle;
 	}
 
 	template<typename T>
-	inline void ArrayData<T>::swap(size_t index0,size_t index1)
+	inline void ArrayData<T>::swap(unsigned int index0,unsigned int index1)
 	{
 		index0 *= sizePerParticle;
 		index1 *= sizePerParticle;
-		for (size_t i = 0; i < sizePerParticle; ++i)
+		for (unsigned int i = 0; i < sizePerParticle; ++i)
 			std::swap(data[index0 + i],data[index1 + i]);
 	}
 }

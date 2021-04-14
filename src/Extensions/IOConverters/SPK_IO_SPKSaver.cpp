@@ -108,7 +108,7 @@ namespace IO
 		template<typename T>
 		void storeValue(const std::vector<Ref<T> >& value, Buffer& buffer)
 		{
-			buffer << value.size();
+			buffer << static_cast<unsigned int>(value.size());
 			for(unsigned int t = 0; t < value.size(); t++)
 				buffer << saver->context->refId(value[t].get());
 		}
@@ -225,7 +225,8 @@ namespace IO
 	{
 		// Context
 		context = SPK_NEW(SaveContext, os);
-		for(unsigned int t = 0; t < objRef.size(); t++)
+        unsigned int size = static_cast<unsigned int>(objRef.size());
+		for(unsigned int t = 0; t < size; t++)
 		{
 			SaveContext::Object obj;
 			obj.id = t + 1;
@@ -236,13 +237,13 @@ namespace IO
 		// Header
 		context->buffer << SPKFormatVariables::MAGIC_NUMBER
 			<< SPKFormatVariables::VERSION
-			<< objRef.size();
+			<< size;
 		context->nbConnectionPosition = context->buffer.getPosition();
 		context->buffer << (unsigned int)0; // Number of connections will be known in the 2nd phase
 		context->buffer << (unsigned int)0; // Data-length is not already known
 
 		// Type list
-		for(unsigned int t = 0; t < objRef.size(); t++)
+		for(unsigned int t = 0; t < size; t++)
 			context->buffer << objRef[t]->getClassName();
 	}
 

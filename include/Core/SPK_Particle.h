@@ -113,7 +113,7 @@ namespace SPK
 		* @brief Gets the index of the particle within its group
 		* @return the index of the particle
 		*/
-		size_t getIndex() const;
+		unsigned int getIndex() const;
 
 		/**
 		* @brief Gets the current position of the particle
@@ -217,13 +217,13 @@ namespace SPK
 
 	private :
 
-		Particle(Group& group,size_t index);
+		Particle(Group& group,unsigned int index);
 
 		Group& group;
-		mutable size_t index;
+		mutable unsigned int index;
 	};
 
-	inline Particle::Particle(Group& group,size_t index) :
+	inline Particle::Particle(Group& group,unsigned int index) :
 		group(group),
 		index(index)
 	{}
@@ -269,7 +269,7 @@ namespace SPK
 		return group;
 	}
 
-	inline size_t Particle::getIndex() const
+	inline unsigned int Particle::getIndex() const
 	{
 		return index;
 	}

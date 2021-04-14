@@ -43,7 +43,7 @@ namespace SPK
 
 	EmitterAttacher::~EmitterAttacher(){}
 
-	EmitterAttacher::EmitterData::EmitterData(size_t nbParticles,Group* emittingGroup) :
+	EmitterAttacher::EmitterData::EmitterData(unsigned int nbParticles,Group* emittingGroup) :
 		data(SPK_NEW_ARRAY(Ref<Emitter>,nbParticles)),
 		dataSize(nbParticles),
 		group(emittingGroup)
@@ -162,7 +162,7 @@ namespace SPK
 		}
 	}
 
-	void EmitterAttacher::EmitterData::setEmitter(size_t index,const Ref<Emitter>& emitter)
+	void EmitterAttacher::EmitterData::setEmitter(unsigned int index,const Ref<Emitter>& emitter)
 	{
 		data[index] = copy(emitter);
 		data[index]->getTransform().reset();

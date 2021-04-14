@@ -27,7 +27,7 @@ namespace IO
 {
 	const bool Buffer::USE_LITTLE_ENDIANS = Buffer::isLittleEndians();
 
-	Buffer::Buffer(size_t capacity) :
+	Buffer::Buffer(unsigned int capacity) :
 		capacity(capacity),
 		size(0),
 		position(0)
@@ -35,7 +35,7 @@ namespace IO
 		buf = SPK_NEW_ARRAY(char, capacity);
 	}
 
-	Buffer::Buffer(size_t capacity,std::istream& is) :
+	Buffer::Buffer(unsigned int capacity,std::istream& is) :
 		capacity(capacity),
 		size(0),
 		position(0)
@@ -50,9 +50,9 @@ namespace IO
 		SPK_DELETE_ARRAY(buf);
 	}
 
-	const char* Buffer::get(size_t length) const
+	const char* Buffer::get(unsigned int length) const
 	{
-		size_t oldPos = position;
+        unsigned int oldPos = position;
 		position += length;
 		if (position >= size) position = size;
 		return buf + oldPos;
@@ -80,16 +80,16 @@ namespace IO
 		buf[position++] = c; 
 	}
 
-	void Buffer::put(const char* c,size_t length) 
+	void Buffer::put(const char* c,unsigned int length) 
 	{ 
 		updateSize(position + length);
 		std::memcpy(buf + position,c,length);
 		position += length;
 	}
 
-	void Buffer::updateSize(size_t newPosition)
+	void Buffer::updateSize(unsigned int newPosition)
 	{
-		size_t newCapacity = capacity;
+        unsigned int newCapacity = capacity;
 		while (newPosition >= newCapacity)
 			newCapacity <<= 1;	
 

@@ -145,7 +145,7 @@ namespace SPK
 		dataSet.setData(DEATH_VALUE_DATA_INDEX,deathValuesDataPtr);
 
 		// Inits the newly created data
-		for (size_t i = 0; i < group.getNbParticles(); ++i)
+		for (unsigned int i = 0; i < group.getNbParticles(); ++i)
 		{
 			(*birthValuesDataPtr)[i] = SPK_RANDOM(minBirthValue,maxBirthValue);
 			(*deathValuesDataPtr)[i] = SPK_RANDOM(minDeathValue,maxDeathValue);
@@ -160,7 +160,7 @@ namespace SPK
 
 		for (GroupIterator particleIt(group); !particleIt.end(); ++particleIt)
 		{
-			size_t index = particleIt->getIndex();
+            unsigned int index = particleIt->getIndex();
 			interpolateParam(data[index],deathValuesData[index],birthValuesData[index],particleIt->getEnergy());
 		}
 	}
@@ -168,7 +168,7 @@ namespace SPK
 	template<typename T>
 	void RandomInterpolator<T>::init(T& data,Particle& particle,DataSet* dataSet) const
 	{
-		size_t index = particle.getIndex();
+        unsigned int index = particle.getIndex();
 		data = SPK_GET_DATA(ArrayData<T>,dataSet,BIRTH_VALUE_DATA_INDEX)[index] = SPK_RANDOM(minBirthValue,maxBirthValue);
 		SPK_GET_DATA(ArrayData<T>,dataSet,DEATH_VALUE_DATA_INDEX)[index] = SPK_RANDOM(minDeathValue,maxDeathValue);
 	}

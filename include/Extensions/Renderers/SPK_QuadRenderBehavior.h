@@ -89,7 +89,7 @@ namespace SPK
 		* @param nbX : the number of cuts in the X axis
 		* @param nbY : the number of cuts in the Y axis
 		*/
-		void setAtlasDimensions(size_t nbX,size_t nbY);
+		void setAtlasDimensions(unsigned int nbX,unsigned int nbY);
 
 		/**
 		* @brief Sets the size ratio of this GLQuadRenderer
@@ -119,20 +119,20 @@ namespace SPK
 		/**
 		* @brief Gets the atlas dimension on the X axis
 		*
-		* See setAtlasDimensions(size_t,size_t) for more information
+		* See setAtlasDimensions(unsigned int,unsigned int) for more information
 		*
 		* @return the atlas dimension on the X axis
 		*/
-		size_t getAtlasDimensionX() const;
+		unsigned int getAtlasDimensionX() const;
 
 		/**
 		* @brief Gets the atlas dimension on the Y axis
 		*
-		* See setAtlasDimensions(size_t,size_t) for more information
+		* See setAtlasDimensions(unsigned int,unsigned int) for more information
 		*
 		* @return the atlas dimension on the Y axis
 		*/
-		size_t getAtlasDimensionY() const;
+		unsigned int getAtlasDimensionY() const;
 
 		/**
 		* @brief Gets the scale of the width of this GLQuadRenderer
@@ -154,8 +154,8 @@ namespace SPK
 		float scaleY;
 
 		// texture atlas info
-		size_t textureAtlasNbX;
-		size_t textureAtlasNbY;
+		unsigned int textureAtlasNbX;
+		unsigned int textureAtlasNbY;
 		float textureAtlasW;
 		float textureAtlasH;
 
@@ -204,12 +204,12 @@ namespace SPK
 		return texturingMode;
 	}
 
-	inline size_t QuadRenderBehavior::getAtlasDimensionX() const
+	inline unsigned int QuadRenderBehavior::getAtlasDimensionX() const
 	{
 		return textureAtlasNbX;
 	}
 
-	inline size_t QuadRenderBehavior::getAtlasDimensionY() const
+	inline unsigned int QuadRenderBehavior::getAtlasDimensionY() const
 	{
 		return textureAtlasNbY;
 	}

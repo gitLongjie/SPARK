@@ -61,7 +61,7 @@ namespace SPK
 
 	const Ref<Action>& ActionSet::getAction(size_t index) const
 	{
-		SPK_ASSERT(index <= getNbActions(),"ActionSet::getAction(size_t) - Action index is out of bounds : " << index);
+		SPK_ASSERT(index <= getNbActions(),"ActionSet::getAction(unsigned int) - Action index is out of bounds : " << index);
 		return actions[index];
 	}
 

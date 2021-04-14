@@ -23,7 +23,7 @@
 
 namespace SPK
 {
-	void DataSet::init(size_t nbData)
+	void DataSet::init(unsigned int nbData)
 	{
 		destroyAllData();
 
@@ -31,13 +31,13 @@ namespace SPK
 		{
 			SPK_DELETE_ARRAY(dataArray);
 			dataArray = SPK_NEW_ARRAY(Data*,nbData);
-			for (size_t i = 0; i < nbData; ++i)
+			for (unsigned int i = 0; i < nbData; ++i)
 				dataArray[i] = NULL;
 			this->nbData = nbData;
 		}
 	}
 
-	void DataSet::setData(size_t index,Data* data)
+	void DataSet::setData(unsigned int index,Data* data)
 	{
 		SPK_DELETE(dataArray[index]);
 		dataArray[index] = data;
@@ -45,7 +45,7 @@ namespace SPK
 
 	void DataSet::destroyAllData()
 	{
-		for (size_t i = 0; i < nbData; ++i)
+		for (unsigned int i = 0; i < nbData; ++i)
 			setData(i,NULL);
 		initialized = false;
 	}

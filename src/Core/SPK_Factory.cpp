@@ -100,6 +100,6 @@ namespace SPK
 
 	unsigned int Factory::getRegistrationNb() const
 	{
-		return registeredTypes.size();
+		return static_cast<unsigned int>(registeredTypes.size());
 	}
 }

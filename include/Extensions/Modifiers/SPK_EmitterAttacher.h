@@ -66,31 +66,31 @@ namespace SPK
 	private :
 
 		// Data indices
-		static const size_t NB_DATA = 1;
-		static const size_t EMITTER_INDEX = 0;
+		static const unsigned int NB_DATA = 1;
+		static const unsigned int EMITTER_INDEX = 0;
 
 		class EmitterData : public Data
 		{
 		public :
 
-			EmitterData(size_t nbParticles,Group* emittingGroup);
+			EmitterData(unsigned int nbParticles,Group* emittingGroup);
 			
 			Ref<Emitter>* getEmitters() const;
 			void setGroup(Group* group);
 			Group* getGroup() const;
 
-			void setEmitter(size_t index,const Ref<Emitter>& emitter);
+			void setEmitter(unsigned int index,const Ref<Emitter>& emitter);
 
 		private :
 
 			Ref<Emitter>* data;
-			size_t dataSize;
+			unsigned int dataSize;
 
 			Group* group;
 
 			~EmitterData();
 
-			virtual void swap(size_t index0,size_t index1);
+			virtual void swap(unsigned int index0,unsigned int index1);
 		};
 
 		Ref<Emitter> baseEmitter;
@@ -179,7 +179,7 @@ namespace SPK
 		return group;
 	}
 
-	inline void EmitterAttacher::EmitterData::swap(size_t index0,size_t index1)
+	inline void EmitterAttacher::EmitterData::swap(unsigned int index0,unsigned int index1)
 	{
 		SPK::swap(data[index0],data[index1]); // Calls the optimized swap of Ref instead of the std::swap
 	}

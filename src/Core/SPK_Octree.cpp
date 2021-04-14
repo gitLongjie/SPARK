@@ -27,8 +27,8 @@
 namespace SPK
 {
 	// TODO Allows to tweak this
-	const size_t Octree::MAX_LEVEL_INDEX = 4; // A too high number will be highly memory comsuming
-	const size_t Octree::MAX_PARTICLES_NB_PER_CELL = 32;
+	const unsigned int Octree::MAX_LEVEL_INDEX = 4; // A too high number will be highly memory comsuming
+	const unsigned int Octree::MAX_PARTICLES_NB_PER_CELL = 32;
 	const float Octree::OPTIMAL_CELL_SIZE_FACTOR = 4.0f; // optimal cell size is defined as : factor * mean radius
 	const float Octree::MIN_CELL_SIZE = 0.001f;
 
@@ -59,7 +59,7 @@ namespace SPK
 			SPK_DELETE_ARRAY(minPos);
 			SPK_DELETE_ARRAY(maxPos);
 
-			particleCells = SPK_NEW_ARRAY(Array<size_t>,nbParticles);
+			particleCells = SPK_NEW_ARRAY(Array<unsigned int>,nbParticles);
 			minPos = SPK_NEW_ARRAY(Triplet,nbParticles);
 			maxPos = SPK_NEW_ARRAY(Triplet,nbParticles);
 		}
@@ -96,7 +96,7 @@ namespace SPK
 		Vector3D ratios = Vector3D(minCellSize) / cellSizes;
 
 		// Optimizes if possible by scaling down the octree in order to use less levels
-		size_t maxLevel = MAX_LEVEL_INDEX;
+		unsigned int maxLevel = MAX_LEVEL_INDEX;
 		while (ratios.getMin() >= 2.0f && maxLevel > 0)
 		{
 			ratios /= 2.0f;
@@ -121,7 +121,7 @@ namespace SPK
 			const Vector3D position = particle.position() - offset;
 			const float radius = particle.getRadius();
 
-			size_t particleIndex = particle.getIndex();
+			unsigned int particleIndex = particle.getIndex();
 
 			Vector3D minPosf = (position - radius) * ratio;
 			Vector3D maxPosf = (position + radius) * ratio;
@@ -134,17 +134,17 @@ namespace SPK
 
 		// Fills results (particle/cell relationship)
 		activeCells.clear();
-		for (size_t i = 0; i < nbCells; ++i)
+		for (unsigned int i = 0; i < nbCells; ++i)
 			if (!cells[i].particles.empty())
 			{
 				activeCells.push(i);
-				size_t nbParticlesInCells = cells[i].particles.size();
-				for (size_t j = 0; j < nbParticlesInCells; ++j)
+				unsigned int nbParticlesInCells = cells[i].particles.size();
+				for (unsigned int j = 0; j < nbParticlesInCells; ++j)
 					particleCells[cells[i].particles[j]].push(i);
 			}
 	}
 
-	size_t Octree::initNextCell(size_t level,size_t offsetX,size_t offsetY,size_t offsetZ)
+	unsigned int Octree::initNextCell(unsigned int level,unsigned int offsetX,unsigned int offsetY,unsigned int offsetZ)
 	{
 		if (nbCells == cells.size())
 			cells.push(Cell(level,offsetX,offsetY,offsetZ));
@@ -153,7 +153,7 @@ namespace SPK
 		return nbCells++;
 	}
 
-	void Octree::addToCell(size_t cellIndex,size_t particleIndex,size_t maxLevel)
+	void Octree::addToCell(unsigned int cellIndex,unsigned int particleIndex,unsigned int maxLevel)
 	{
 		Cell& cell = cells[cellIndex];
 		if (!cell.hasChildren && (cell.particles.size() < MAX_PARTICLES_NB_PER_CELL || cell.level == maxLevel))
@@ -163,10 +163,10 @@ namespace SPK
 			// Creates children if necessary
 			if (!cell.hasChildren)
 			{
-				for (size_t i = 0; i < 8; ++i)
+				for (unsigned int i = 0; i < 8; ++i)
 				{
 
-					size_t childIndex = initNextCell(
+					unsigned int childIndex = initNextCell(
 						cells[cellIndex].level + 1,
 						(cells[cellIndex].offsetX << 1) + ((i >> 2) & 1),
 						(cells[cellIndex].offsetY << 1) + ((i >> 1) & 1),
@@ -177,8 +177,8 @@ namespace SPK
 				cells[cellIndex].hasChildren = true;
 
 				// Redistributes particles in this cell to its newly created children
-				size_t nbParticlesInCell = cells[cellIndex].particles.size();
-				for (size_t i = 0; i < nbParticlesInCell; ++i)
+				unsigned int nbParticlesInCell = cells[cellIndex].particles.size();
+				for (unsigned int i = 0; i < nbParticlesInCell; ++i)
 					addToChildrenCells(cellIndex,cells[cellIndex].particles[i],maxLevel);
 				cells[cellIndex].particles.clear();
 			}
@@ -187,10 +187,10 @@ namespace SPK
 		}
 	}
 
-	void Octree::addToChildrenCells(size_t parentIndex,size_t particleIndex,size_t maxLevel) // TODO This code may be optimized ?
+	void Octree::addToChildrenCells(unsigned int parentIndex,unsigned int particleIndex,unsigned int maxLevel) // TODO This code may be optimized ?
 	{
-		size_t childLevel = cells[parentIndex].level + 1;
-		size_t divisor = maxLevel - childLevel;
+		unsigned int childLevel = cells[parentIndex].level + 1;
+		unsigned int divisor = maxLevel - childLevel;
 
 		Triplet& min = minPos[particleIndex];
 		Triplet& max = maxPos[particleIndex];

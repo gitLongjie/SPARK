@@ -35,7 +35,7 @@ namespace SPK
 		0.0f,	// PARAM_ROTATION_SPEED
 	};
 
-	Group::Group(const Ref<System>& system,size_t capacity) :
+	Group::Group(const Ref<System>& system,unsigned int capacity) :
 		Transformable(SHARE_POLICY_FALSE),
 		system(system.get()),
 		nbEnabledParameters(0),
@@ -80,7 +80,7 @@ namespace SPK
 		renderer.dataSet = attachDataSet(renderer.obj.get());
 
 		setColorInterpolator(group.copyChild(group.colorInterpolator.obj));
-		for (size_t i = 0; i < NB_PARAMETERS; ++i)
+		for (unsigned int i = 0; i < NB_PARAMETERS; ++i)
 			setParamInterpolator(static_cast<Param>(i),group.copyChild(group.paramInterpolators[i].obj));
 
 		for (std::vector<Ref<Emitter> >::const_iterator it = group.emitters.begin(); it != group.emitters.end(); ++it)
@@ -110,7 +110,7 @@ namespace SPK
 		SPK_DELETE_ARRAY(particleData.sqrDists);
 		SPK_DELETE_ARRAY(particleData.colors);
 
-		for (size_t i = 0; i < NB_PARAMETERS; ++i)
+		for (unsigned int i = 0; i < NB_PARAMETERS; ++i)
 			SPK_DELETE_ARRAY(particleData.parameters[i]);
 
 		SPK_DELETE(octree);
@@ -118,15 +118,15 @@ namespace SPK
 		emptyBufferedParticles();
 	}
 
-	Particle Group::getParticle(size_t index)
+	Particle Group::getParticle(unsigned int index)
 	{
-		SPK_ASSERT(index < particleData.nbParticles,"Group::getParticle(size_t) - Particle index is out of bounds : " << index);
+		SPK_ASSERT(index < particleData.nbParticles,"Group::getParticle(unsigned int) - Particle index is out of bounds : " << index);
 		return Particle(*this,index);
 	}
 
-	const Particle Group::getParticle(size_t index) const
+	const Particle Group::getParticle(unsigned int index) const
 	{
-		SPK_ASSERT(index < particleData.nbParticles,"Group::getParticle(size_t) - Particle index is out of bounds : " << index);
+		SPK_ASSERT(index < particleData.nbParticles,"Group::getParticle(unsigned int) - Particle index is out of bounds : " << index);
 		return Particle(const_cast<Group&>(*this),index);
 	}
 
@@ -151,8 +151,8 @@ namespace SPK
 		// Prepares the additionnal data
 		prepareAdditionnalData();
 
-		size_t nbAutoBorn = 0;
-		size_t nbManualBorn = nbBufferedParticles;
+		unsigned int nbAutoBorn = 0;
+		unsigned int nbManualBorn = nbBufferedParticles;
 
 		// Checks the number of born particles
 		bool hasAliveEmitters = false;
@@ -171,21 +171,21 @@ namespace SPK
 				hasAliveEmitters |= ((*it)->getCurrentTank() != 0); // An emitter with some particles in its tank is still potentially alive
 			}
 
-		size_t emitterIndex = 0;
-		size_t nbBorn = nbAutoBorn + nbManualBorn;
+		unsigned int emitterIndex = 0;
+		unsigned int nbBorn = nbAutoBorn + nbManualBorn;
 
 		// Updates the age of the particles function of the delta time
-		for (size_t i = 0; i < particleData.nbParticles; ++i)
+		for (unsigned int i = 0; i < particleData.nbParticles; ++i)
 			particleData.ages[i] += deltaTime;
 
 		// Computes the energy of the particles (if they are not immortal)
 		if (!immortal)
-			for (size_t i = 0; i < particleData.nbParticles; ++i)
+			for (unsigned int i = 0; i < particleData.nbParticles; ++i)
 				particleData.energies[i] = 1.0f - particleData.ages[i] / particleData.lifeTimes[i];
 
 		// Updates the position of particles function of their velocity
 		if (!still)
-			for (size_t i = 0; i < particleData.nbParticles; ++i)
+			for (unsigned int i = 0; i < particleData.nbParticles; ++i)
 			{
 				particleData.oldPositions[i] = particleData.positions[i];
 				particleData.positions[i] += particleData.velocities[i] * deltaTime;
@@ -194,7 +194,7 @@ namespace SPK
 		// Interpolates the parameters
 		if (colorInterpolator.obj)
 			colorInterpolator.obj->interpolate(particleData.colors,*this,colorInterpolator.dataSet);
-		for (size_t i = 0; i < nbEnabledParameters; ++i)
+		for (unsigned int i = 0; i < nbEnabledParameters; ++i)
 		{
 			FloatInterpolatorDef& interpolator = paramInterpolators[enabledParamIndices[i]];
 			interpolator.obj->interpolate(particleData.parameters[enabledParamIndices[i]],*this,interpolator.dataSet);
@@ -213,7 +213,7 @@ namespace SPK
 			renderer.obj->update(*this,renderer.dataSet);
 
 		// Checks dead particles and reinits or swaps
-		for (size_t i = 0; i < particleData.nbParticles; ++i)
+		for (unsigned int i = 0; i < particleData.nbParticles; ++i)
 			if (particleData.energies[i] <= 0.0f)
 			{
 				// Death action
@@ -250,7 +250,7 @@ namespace SPK
 		// Computes the distance of particles from the camera
 		if (distanceComputationEnabled)
 		{
-			for (size_t i = 0; i < particleData.nbParticles; ++i)
+			for (unsigned int i = 0; i < particleData.nbParticles; ++i)
 				particleData.sqrDists[i] = getSqrDist(particleData.positions[i],system->getCameraPosition());
 		}
 
@@ -270,15 +270,15 @@ namespace SPK
 		}
 	}
 
-	void Group::reallocate(size_t capacity)
+	void Group::reallocate(unsigned int capacity)
 	{
-		SPK_ASSERT(capacity != 0,"Group::reallocate(size_t) - Group capacity must not be 0");
+		SPK_ASSERT(capacity != 0,"Group::reallocate(unsigned int) - Group capacity must not be 0");
 
 		if (isInitialized() && (!particleData.initialized || capacity != particleData.maxParticles))
 		{
 			destroyAllAdditionnalData();
 
-			size_t copySize = particleData.nbParticles;
+			unsigned int copySize = particleData.nbParticles;
 			if (capacity < copySize)
 				copySize = capacity;
 
@@ -291,7 +291,7 @@ namespace SPK
 			reallocateArray(particleData.sqrDists,capacity,copySize);
 			reallocateArray(particleData.colors,capacity,copySize);
 
-			for (size_t i = 0; i < nbEnabledParameters; ++i)
+			for (unsigned int i = 0; i < nbEnabledParameters; ++i)
 				reallocateArray(particleData.parameters[enabledParamIndices[i]],capacity,copySize);
 
 			particleData.initialized = true;
@@ -369,7 +369,7 @@ namespace SPK
 		{
 			emitters.erase(it);
 			/// TODO: remove this by optimizing the data structure.
-			for(size_t e = 0; e < activeEmitters.size(); e++)
+			for(unsigned int e = 0; e < activeEmitters.size(); e++)
 				if(activeEmitters[e].obj == emitter.get())
 				{
 					activeEmitters.erase(activeEmitters.begin() + e);
@@ -455,12 +455,12 @@ namespace SPK
 	void Group::recomputeEnabledParamIndices()
 	{
 		nbEnabledParameters = 0;
-		for (size_t i = 0; i < NB_PARAMETERS; ++i)
+		for (unsigned int i = 0; i < NB_PARAMETERS; ++i)
 			if (paramInterpolators[i].obj)
 				enabledParamIndices[nbEnabledParameters++] = i;
 	}
 
-	bool Group::initParticle(size_t index,size_t& emitterIndex,size_t& nbManualBorn)
+	bool Group::initParticle(unsigned int index,unsigned int& emitterIndex,unsigned int& nbManualBorn)
 	{
 		Particle particle(getParticle(index));
 
@@ -473,7 +473,7 @@ namespace SPK
 		else
 			particleData.colors[index] = 0xFFFFFFFF;
 
-		for (size_t i = 0; i < nbEnabledParameters; ++i)
+		for (unsigned int i = 0; i < nbEnabledParameters; ++i)
 		{
 			FloatInterpolatorDef& interpolator = paramInterpolators[enabledParamIndices[i]];
 			interpolator.obj->init(particleData.parameters[enabledParamIndices[i]][index],particle,interpolator.dataSet);
@@ -532,7 +532,7 @@ namespace SPK
 		}
 	}
 
-	void Group::swapParticles(size_t index0,size_t index1)
+	void Group::swapParticles(unsigned int index0,unsigned int index1)
 	{
 		// Swaps particles attributes
 		std::swap(particleData.positions[index0],particleData.positions[index1]);
@@ -545,7 +545,7 @@ namespace SPK
 		std::swap(particleData.colors[index0],particleData.colors[index1]);
 
 		// Swaps particles enabled parameters
-		for (size_t i = 0; i < nbEnabledParameters; ++i)
+		for (unsigned int i = 0; i < nbEnabledParameters; ++i)
 			std::swap(particleData.parameters[enabledParamIndices[i]][index0],particleData.parameters[enabledParamIndices[i]][index1]);
 
 		// Swaps particles additionnal swappable data
@@ -631,7 +631,7 @@ namespace SPK
 			renderer.obj->computeAABB(AABBMin,AABBMax,*this,renderer.dataSet);
 		}
 		else // Switches to default AABB computation
-			for (size_t i = 0; i < particleData.nbParticles; ++i)
+			for (unsigned int i = 0; i < particleData.nbParticles; ++i)
 			{
 				AABBMin.setMin(particleData.positions[i]);
 				AABBMax.setMax(particleData.positions[i]);
@@ -776,9 +776,9 @@ namespace SPK
 
 		prepareAdditionnalData();
 
-		size_t nbManualBorn = nbBufferedParticles;
+		unsigned int nbManualBorn = nbBufferedParticles;
 
-		size_t dummy;
+		unsigned int dummy;
 		while (nbManualBorn > 0 && particleData.maxParticles - particleData.nbParticles > 0)
 			if (!initParticle(particleData.nbParticles++,dummy,nbManualBorn))
 				--particleData.nbParticles;
@@ -816,7 +816,7 @@ namespace SPK
 		if (colorInterpolator.obj)
 			colorInterpolator.obj->prepareData(*this,colorInterpolator.dataSet);
 
-		for (size_t i = 0; i < nbEnabledParameters; ++i)
+		for (unsigned int i = 0; i < nbEnabledParameters; ++i)
 		{
 			FloatInterpolatorDef& interpolator = paramInterpolators[enabledParamIndices[i]];
 			interpolator.obj->prepareData(*this,interpolator.dataSet);
@@ -833,7 +833,7 @@ namespace SPK
 			// Creates data sets
 			renderer.dataSet = attachDataSet(renderer.obj.get());
 			colorInterpolator.dataSet = attachDataSet(colorInterpolator.obj.get());
-			for (size_t i = 0; i < nbEnabledParameters; ++i)
+			for (unsigned int i = 0; i < nbEnabledParameters; ++i)
 			{
 				FloatInterpolatorDef& interpolator = paramInterpolators[enabledParamIndices[i]];
 				interpolator.dataSet = attachDataSet(interpolator.obj.get());
@@ -905,7 +905,7 @@ namespace SPK
 			if (object) return object;
 		}
 
-		for (size_t i = 0; i < NB_PARAMETERS; ++i)
+		for (unsigned int i = 0; i < NB_PARAMETERS; ++i)
 			if (paramInterpolators[i].obj)
 			{
 				object = paramInterpolators[i].obj->findByName(name);

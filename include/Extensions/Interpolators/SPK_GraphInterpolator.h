@@ -251,10 +251,10 @@ namespace SPK
 
 	private :
 
-		static const size_t NB_DATA = 3;
-		static const size_t OFFSET_X_DATA_INDEX = 0;
-		static const size_t SCALE_X_DATA_INDEX = 1;
-		static const size_t RATIO_Y_DATA_INDEX = 2;
+		static const unsigned int NB_DATA = 3;
+		static const unsigned int OFFSET_X_DATA_INDEX = 0;
+		static const unsigned int SCALE_X_DATA_INDEX = 1;
+		static const unsigned int RATIO_Y_DATA_INDEX = 2;
 
 		std::vector<InterpolatorEntry<T> > graph;
 		std::vector<unsigned int> sortedGraph;
@@ -454,7 +454,7 @@ namespace SPK
 	template<typename T>
 	inline unsigned int GraphInterpolator<T>::getNbEntries() const
 	{
-		return graph.size();
+		return static_cast<unsigned int>(graph.size());
 	}
 
 	template<typename T>
@@ -464,7 +464,7 @@ namespace SPK
 			return;
 
 		description::graph::elementRemoved(this, id);
-		swapEntries(id, graph.size() - 1);
+		swapEntries(id, static_cast<unsigned int>(graph.size() - 1));
 		unsigned int sortedId = graph[graph.size() - 1].id;
 		graph.erase(graph.begin() + (graph.size() - 1));
 		sortedGraph.erase(sortedGraph.begin() + sortedId);
@@ -481,9 +481,9 @@ namespace SPK
 			unsigned int last = sortedGraph[sortedGraph.size() - 1];
 			entry.x = graph[last].x + 1;
 		}
-		entry.id = sortedGraph.size();
+		entry.id = static_cast<unsigned int>(sortedGraph.size());
 		graph.push_back(entry);
-		sortedGraph.push_back(graph.size() - 1);
+		sortedGraph.push_back(static_cast<unsigned int>(graph.size()) - 1);
 	}
 
 	template<typename T>
@@ -585,7 +585,7 @@ namespace SPK
 		dataSet.setData(RATIO_Y_DATA_INDEX,ratioYDataPtr);
 
 		// Inits the newly created data
-		for (size_t i = 0; i < group.getNbParticles(); ++i)
+		for (unsigned int i = 0; i < group.getNbParticles(); ++i)
 		{
 			(*offsetXDataPtr)[i] = SPK_RANDOM(-offsetXVariation,offsetXVariation);
 			(*scaleXDataPtr)[i] = 1.0f + SPK_RANDOM(-scaleXVariation,scaleXVariation);
@@ -662,7 +662,7 @@ namespace SPK
 
 		for (GroupIterator particleIt(group); !particleIt.end(); ++particleIt)
 		{
-			size_t index = particleIt->getIndex();
+            unsigned int index = particleIt->getIndex();
 			interpolateParticle(data[index],*particleIt,offsetXData[index],scaleXData[index],ratioYData[index]);
 		}
 	}
@@ -672,7 +672,7 @@ namespace SPK
 	{
 		SPK_ASSERT(!graph.empty(),"GraphInterpolator<T>::init(T&,Particle&,DataSet*) const - The graph of the interpolator is empty. Cannot interpolate");
 
-		size_t index = particle.getIndex();
+        unsigned int index = particle.getIndex();
 		FloatArrayData& offsetXData = SPK_GET_DATA(FloatArrayData,dataSet,OFFSET_X_DATA_INDEX);
 		FloatArrayData& scaleXData = SPK_GET_DATA(FloatArrayData,dataSet,SCALE_X_DATA_INDEX);
 		FloatArrayData& ratioYData = SPK_GET_DATA(FloatArrayData,dataSet,RATIO_Y_DATA_INDEX);

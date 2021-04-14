@@ -30,8 +30,8 @@ namespace IO
 	{
 	public :
 
-		Buffer(size_t initialCapacity);
-		Buffer(size_t,std::istream& is);
+		Buffer(unsigned int initialCapacity);
+		Buffer(unsigned int,std::istream& is);
 		~Buffer();
 
 		const char* getData() const	{ return buf; }
@@ -40,12 +40,12 @@ namespace IO
 		// Size operators //
 		////////////////////
 
-		size_t getSize() const				{ return size; }
-		size_t getCapacity() const			{ return capacity; }
-		size_t getPosition() const			{ return position; }
+		unsigned int getSize() const				{ return size; }
+		unsigned int getCapacity() const			{ return capacity; }
+        unsigned int getPosition() const			{ return position; }
 
-		void skip(size_t nb) const			{ position += nb; }
-		void setPosition(size_t pos) const	{ position = pos; }
+		void skip(unsigned int nb) const			{ position += nb; }
+		void setPosition(unsigned int pos) const	{ position = pos; }
 		void clear()						{ position = size = 0; }
 
 		bool isAtEnd() const				{ return position >= size; }
@@ -54,7 +54,7 @@ namespace IO
 		// Primitive get operations //
 		//////////////////////////////
 
-		const char* get(size_t length) const;
+		const char* get(unsigned int length) const;
 
 		int32 get32() const
 		{
@@ -74,7 +74,7 @@ namespace IO
 		//////////////////////////////
 
 		void put(char c);
-		void put(const char* c, size_t length);
+		void put(const char* c, unsigned int length);
 
 		void put32(int32 i)
 		{
@@ -93,7 +93,7 @@ namespace IO
 		void put(float f)			{ put32(*reinterpret_cast<int32*>(&f)); }
 		void put(uint32 i)			{ put32(*reinterpret_cast<int32*>(&i)); }
 		void put(int32 i)			{ put32(i); }
-		void put(std::string s)		{ put(s.data(),s.size()); put('\0'); }
+		void put(std::string s)		{ put(s.data(),static_cast<unsigned int>(s.size())); put('\0'); }
 		void put(const Vector3D& v)	{ put(v.x); put(v.y); put(v.z); }
 		void put(const Color& c)	{ put32(*reinterpret_cast<const int32*>(&c)); }
 		void put(bool b)			{ put(static_cast<char>(b ? 0x01 : 0x00)); }
@@ -102,7 +102,7 @@ namespace IO
 		void put(const std::vector<T>& t)
 		{
 			put(static_cast<uint32>(t.size()));
-			for (size_t i = 0; i < t.size(); ++i)
+			for (unsigned int i = 0; i < t.size(); ++i)
 				put(t[i]);
 		}
 
@@ -181,7 +181,7 @@ namespace IO
 			{
 				unsigned int size = buffer->get<uint32>();
 				std::vector<T> tmp;
-				for(size_t t = 0; t < size; t++)
+				for(unsigned int t = 0; t < size; t++)
 					tmp.push_back(buffer->get<T>());
 				return tmp;
 			}
@@ -193,9 +193,9 @@ namespace IO
 		static const bool USE_LITTLE_ENDIANS;
 
 		char* buf;
-		size_t capacity;
-		size_t size;
-		mutable size_t position;
+		unsigned int capacity;
+		unsigned int size;
+		mutable unsigned int position;
 
 		static int32 swap32(int32 i)
 		{
@@ -205,7 +205,7 @@ namespace IO
 					(i & 0x000000FF << 24) ;
 		}
 
-		void updateSize(size_t newPosition);
+		void updateSize(unsigned int newPosition);
 
 		static bool isLittleEndians();
 	};
